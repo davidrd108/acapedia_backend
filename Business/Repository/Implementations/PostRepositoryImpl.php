@@ -21,6 +21,18 @@ class PostRepositoryImpl implements PostRepository
     return PostMapper::mapModelToPostEntity($post);
   }
 
+  public function update(PostEntity $postEntity)
+  {
+    $post = PostMapper::mapUpdatePostEntityToModel($postEntity);
+    $post->save();
+
+    if (isset($loadParams['relations'])) {
+      $post->load($loadParams['relations']);
+    }
+
+    return PostMapper::mapModelToPostEntity($post);
+  }
+
   public function findAll($params = null)
   {
     $posts = Post::query();
