@@ -30,7 +30,7 @@ class PostResource extends JsonResource
         return new UserResource($this->user);
       }),
       'comments' => $this->when(isset($this->comment), function () {
-        return new UserResource($this->comment);
+        return new CommentResource($this->comment);
       })
     ];
   }
