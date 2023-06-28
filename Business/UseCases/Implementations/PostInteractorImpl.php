@@ -41,9 +41,9 @@ class PostInteractorImpl implements PostInteractor
     return $this->postRepository->create($post, $loadParams);
   }
 
-  public function listPosts()
+  public function listPosts($params = [])
   {
-    return $this->postRepository->findAll();
+    return $this->postRepository->findAll($params);
   }
 
   public function showPost($postId)

@@ -22,11 +22,15 @@ class PostResource extends JsonResource
       'description' => $this->description,
       'categoryId' => $this->categoryId,
       'userId' => $this->userId,
+      'comment_count' => $this->whenCounted('comments'),
       'category' => $this->when(isset($this->category), function () {
         return new CategoryResource($this->category);
       }),
       'user' => $this->when(isset($this->user), function () {
         return new UserResource($this->user);
+      }),
+      'comments' => $this->when(isset($this->comment), function () {
+        return new UserResource($this->comment);
       })
     ];
   }

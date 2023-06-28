@@ -7,7 +7,7 @@ use App\Http\Resources\PostResource;
 use App\Mappers\PostMapper;
 use App\Models\Post;
 use Business\UseCases\PostInteractor;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Http\Response;
 use InvalidArgumentException;
@@ -26,10 +26,10 @@ class PostController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Request $request)
   {
     try {
-      $posts = $this->postInteractor->listPosts();
+      $posts = $this->postInteractor->listPosts(["search" => $request->input('search'), "category" => $request->input('category')]);
 
       return PostResource::collection($posts);
     } catch (\Throwable $th) {
