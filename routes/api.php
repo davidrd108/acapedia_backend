@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -38,3 +39,5 @@ Route::get('health', function () {
 });
 
 Route::apiResource('posts', PostController::class);
+Route::apiResource('comments', CommentController::class);
+Route::get('comments/list-by-post/{postId}', [CommentController::class, 'listByPost']);
