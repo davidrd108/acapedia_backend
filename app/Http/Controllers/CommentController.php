@@ -24,7 +24,7 @@ class CommentController extends Controller
   /**
    * Store a newly created resource in storage.
    *
-   * @param  \App\Http\Requests\StorePostRequest  $request
+   * @param  \App\Http\Requests\StoreCommentRequest  $request
    * @return \Illuminate\Http\Response
    */
   public function store(StoreCommentRequest $request)
@@ -47,7 +47,6 @@ class CommentController extends Controller
   /**
    * Store a newly created resource in storage.
    *
-   * @param  \App\Http\Requests\StorePostRequest  $request
    * @return \Illuminate\Http\Response
    */
   public function listByPost($postId)
@@ -67,13 +66,13 @@ class CommentController extends Controller
   /**
    * Remove the specified resource from storage.
    *
-   * @param  \App\Models\Post  $post
+   * @param  \App\Models\Comment  $comment
    * @return \Illuminate\Http\Response
    */
-  public function destroy(Comment $commentId)
+  public function destroy(Comment $comment)
   {
     try {
-      return $this->commentInteractor->deleteComment($commentId);
+      return $this->commentInteractor->deleteComment($comment->id);
     } catch (\Throwable $th) {
       return response()
         ->json(['message' => $th->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
