@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\Comment;
 
 class PostResource extends JsonResource
 {
@@ -29,9 +30,7 @@ class PostResource extends JsonResource
       'user' => $this->when(isset($this->user), function () {
         return new UserResource($this->user);
       }),
-      'comments' => $this->when(isset($this->comment), function () {
-        return new CommentResource($this->comment);
-      })
+      'comments' => CommentResource::collection(Comment::where('post_id', $this->id)->orderBy('created_at', 'desc')->take(5)->get())
     ];
   }
 }
