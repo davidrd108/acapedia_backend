@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\Comment;
 
-class PostResource extends JsonResource
+class CommentResource extends JsonResource
 {
   /**
    * Transform the resource into an array.
@@ -19,18 +18,15 @@ class PostResource extends JsonResource
       'id' => $this->id,
       'createdAt' => $this->createdAt,
       'updatedAt' => $this->updatedAt,
-      'title' => $this->title,
-      'description' => $this->description,
-      'categoryId' => $this->categoryId,
+      'text' => $this->text,
+      'postId' => $this->postId,
       'userId' => $this->userId,
-      'comment_count' => $this->whenCounted('comments'),
-      'category' => $this->when(isset($this->category), function () {
-        return new CategoryResource($this->category);
+      'post' => $this->when(isset($this->post), function () {
+        return new PostResource($this->post);
       }),
       'user' => $this->when(isset($this->user), function () {
         return new UserResource($this->user);
-      }),
-      'comments' => CommentResource::collection(Comment::where('post_id', $this->id)->orderBy('created_at', 'desc')->take(5)->get())
+      })
     ];
   }
 }
