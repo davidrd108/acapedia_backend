@@ -41,9 +41,25 @@ class PostInteractorImpl implements PostInteractor
     return $this->postRepository->create($post, $loadParams);
   }
 
-  public function listPosts()
+  public function updatePost(PostEntity $post)
   {
-    return $this->postRepository->findAll();
+    if (!$this->userRepository->exists($post->userId)) {
+      throw new InvalidArgumentException('The related user is required');
+    }
+
+    if (!$this->categoryRepository->exists($post->categoryId)) {
+      throw new InvalidArgumentException('The related category is required');
+    }
+
+    $withRelations = ['user', 'category'];
+    $loadParams = ['relations' => $withRelations];
+
+    return $this->postRepository->update($post, $loadParams);
+  }
+
+  public function listPosts($params = [])
+  {
+    return $this->postRepository->findAll($params);
   }
 
   public function showPost($postId)

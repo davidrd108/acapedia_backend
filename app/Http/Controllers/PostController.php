@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Mappers\PostMapper;
 use App\Models\Post;
 use Business\UseCases\PostInteractor;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Http\Response;
 use InvalidArgumentException;
@@ -26,10 +27,10 @@ class PostController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Request $request)
   {
     try {
-      $posts = $this->postInteractor->listPosts();
+      $posts = $this->postInteractor->listPosts(["search" => $request->input('search'), "category" => $request->input('category')]);
 
       return PostResource::collection($posts);
     } catch (\Throwable $th) {
@@ -82,13 +83,25 @@ class PostController extends Controller
   /**
    * Update the specified resource in storage.
    *
-   * @param  \Illuminate\Http\Client\Request  $request
+   * @param  \App\Http\Requests\UpdatePostRequest  $request
    * @param  \App\Models\Post  $post
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, Post $post)
+  public function update(UpdatePostRequest $request, Post $post)
   {
-    //
+    try {
+      $post = $this->postInteractor->updatePost(PostMapper::mapUpdateRequestToPostEntity($request));
+
+      return (new PostResource($post))
+        ->response()
+        ->setStatusCode(Response::HTTP_CREATED);
+    } catch (InvalidArgumentException $e) {
+      return response()
+        ->json(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+    } catch (\Throwable $th) {
+      return response()
+        ->json(['message' => $th->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
   }
 
   /**

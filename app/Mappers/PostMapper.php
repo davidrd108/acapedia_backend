@@ -3,6 +3,7 @@
 namespace App\Mappers;
 
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use Business\Entities\PostEntity;
 
@@ -19,6 +20,29 @@ class PostMapper
     $postEntity->userId = $request->userId;
 
     return $postEntity;
+  }
+
+  static function mapUpdateRequestToPostEntity(UpdatePostRequest $request): PostEntity
+  {
+    $postEntity = Post::where('id', $request->id)->first();
+
+    $postEntity->description = $request->description;
+    $postEntity->categoryId = $request->categoryId;
+    $postEntity->userId = $request->userId;
+
+    return $postEntity;
+  }
+
+  static function mapUpdatePostEntityToModel(PostEntity $postEntity): Post
+  {
+
+    $post = Post::where('id', $postEntity->id)->first();
+
+    $post->title = $postEntity->title;
+    $post->category_id = $postEntity->categoryId;
+    $post->user_id = $postEntity->userId;
+
+    return $post;
   }
 
   static function mapPostEntityToModel(PostEntity $postEntity): Post
